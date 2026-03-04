@@ -46,7 +46,7 @@ function getCookie(name) {
 
 function getMerchantId() {
   const url = new URL(window.location.href);
-  const queryKeys = ["merchant_id", "merchantId", "shop_id", "shopId", "shop"];
+  const queryKeys = ["merchant_id", "merchantId", "shop_id", "shopId", "shop", "handle", "merchant"];
 
   for (const key of queryKeys) {
     const value = (url.searchParams.get(key) || "").trim();
