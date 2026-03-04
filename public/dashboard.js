@@ -38,13 +38,30 @@ const DEFAULT_SETTINGS = {
   enableSchema: true,
 };
 
+function getCookie(name) {
+  const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const match = document.cookie.match(new RegExp(`(?:^|; )${escaped}=([^;]*)`));
+  return match ? decodeURIComponent(match[1]) : "";
+}
+
 function getMerchantId() {
   const url = new URL(window.location.href);
-  const fromQuery = url.searchParams.get("merchant_id");
-  if (fromQuery) {
-    localStorage.setItem("fc_merchant_id", fromQuery);
-    return fromQuery;
+  const queryKeys = ["merchant_id", "merchantId", "shop_id", "shopId", "shop"];
+
+  for (const key of queryKeys) {
+    const value = (url.searchParams.get(key) || "").trim();
+    if (value) {
+      localStorage.setItem("fc_merchant_id", value);
+      return value;
+    }
   }
+
+  const fromCookie = getCookie("fc_shopline_merchant");
+  if (fromCookie) {
+    localStorage.setItem("fc_merchant_id", fromCookie);
+    return fromCookie;
+  }
+
   return localStorage.getItem("fc_merchant_id") || "";
 }
 
@@ -114,7 +131,7 @@ async function init() {
 
   if (!merchantId) {
     setConnectionStatus(false);
-    setToast("Missing merchant_id. Open app via Shopline install so merchant context is available.", "error");
+    setToast("Missing merchant context. Run /auth/install once from this app URL, then reload.", "error");
     writeForm(DEFAULT_SETTINGS);
     return;
   }
@@ -138,7 +155,7 @@ async function saveSettings() {
   clearToast();
   const merchantId = getMerchantId();
   if (!merchantId) {
-    setToast("Cannot save: missing merchant_id", "error");
+    setToast("Cannot save: missing merchant context", "error");
     return;
   }
 

@@ -110,7 +110,10 @@ exports.handler = async function handler(event) {
       headers: {
         location: `/?merchant_id=${encodeURIComponent(merchantId)}&connected=1`,
         "cache-control": "no-store",
-        "set-cookie": `fc_shopline_merchant=${encodeURIComponent(merchantId)}; Path=/; Max-Age=2592000; Secure; HttpOnly; SameSite=Lax`,
+        "set-cookie": [
+          `fc_shopline_merchant=${encodeURIComponent(merchantId)}; Path=/; Max-Age=2592000; Secure; SameSite=Lax`,
+          `fc_shopline_merchant_server=${encodeURIComponent(merchantId)}; Path=/; Max-Age=2592000; Secure; HttpOnly; SameSite=Lax`,
+        ],
       },
     };
   } catch (error) {
