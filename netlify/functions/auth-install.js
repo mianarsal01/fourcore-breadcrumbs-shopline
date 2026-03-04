@@ -38,7 +38,10 @@ exports.handler = async function handler(event) {
       state,
     });
 
-    if (merchantId) {
+    // SHOPLINE expects merchant_id (not store handle). If we only have handle-like
+    // value, omit it and let auth server resolve merchant from current session.
+    const merchantIdLooksValid = /^\d+$/.test(String(merchantId).trim());
+    if (merchantIdLooksValid) {
       params.set("merchant_id", merchantId);
     }
 
