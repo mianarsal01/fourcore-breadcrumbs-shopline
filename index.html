@@ -4,152 +4,202 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FourCore Breadcrumbs | Shopline</title>
-    <style>
-      @import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap");
-
-      :root {
-        --fc-bg-1: #ffffff;
-        --fc-bg-2: #f5f5f5;
-        --fc-bg-3: #ebebeb;
-        --fc-text: #101215;
-        --fc-muted: #5a5f65;
-        --fc-border: #c8c8c8;
-        --fc-strong: #17191d;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        margin: 0;
-        font-family: "Manrope", "Avenir Next", "Segoe UI", sans-serif;
-        color: var(--fc-text);
-        background: radial-gradient(circle at 0 0, #fdfdfd 0%, #f5f5f5 40%, #ececec 100%);
-        min-height: 100vh;
-        padding: 24px;
-      }
-
-      .app {
-        max-width: 1040px;
-        margin: 0 auto;
-        border-radius: 20px;
-        border: 1px solid rgba(38, 40, 44, 0.2);
-        box-shadow: 0 18px 34px rgba(20, 22, 24, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.82);
-        background: linear-gradient(180deg, var(--fc-bg-1) 0%, var(--fc-bg-2) 58%, var(--fc-bg-3) 100%);
-        padding: 24px;
-      }
-
-      .hero {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-        background: #f6f6f6;
-        border: 1px solid var(--fc-border);
-        border-radius: 18px;
-        padding: 16px 20px;
-      }
-
-      .hero h1 {
-        margin: 0;
-        font-size: 1.4rem;
-      }
-
-      .hero p {
-        margin: 8px 0 0;
-        color: var(--fc-muted);
-      }
-
-      .brand {
-        width: 104px;
-        height: 42px;
-        object-fit: contain;
-      }
-
-      .grid {
-        margin-top: 16px;
-        display: grid;
-        gap: 12px;
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      }
-
-      .card {
-        border: 1px solid #cfcfcf;
-        border-radius: 14px;
-        background: #f3f3f3;
-        padding: 14px;
-      }
-
-      .card h2 {
-        margin: 0 0 8px;
-        font-size: 1rem;
-      }
-
-      .card p {
-        margin: 0 0 12px;
-        color: var(--fc-muted);
-        font-size: 0.94rem;
-      }
-
-      .btn {
-        display: inline-block;
-        background: var(--fc-strong);
-        color: #fff;
-        text-decoration: none;
-        border-radius: 999px;
-        padding: 8px 13px;
-        font-size: 0.86rem;
-        font-weight: 700;
-      }
-
-      code {
-        display: block;
-        margin-top: 8px;
-        background: #fff;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        padding: 8px;
-        overflow-wrap: anywhere;
-        font-size: 0.82rem;
-      }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/public/dashboard.css" />
   </head>
   <body>
     <main class="app">
       <section class="hero">
         <div>
           <h1>FourCore Breadcrumbs for Shopline</h1>
-          <p>Production scaffold for OAuth, callback, and webhook endpoints.</p>
+          <p>Shopline adaptation of the existing Shopify app dashboard.</p>
         </div>
         <img src="/logo.png" alt="FourCore" class="brand" />
       </section>
 
+      <section class="status">
+        <div class="statusCard">
+          <div class="label">Merchant</div>
+          <div class="value" id="merchant-id">-</div>
+        </div>
+        <div class="statusCard">
+          <div class="label">OAuth session</div>
+          <div class="value" id="connection-status">Checking...</div>
+        </div>
+        <div class="statusCard">
+          <div class="label">Last saved</div>
+          <div class="value" id="last-saved">Never</div>
+        </div>
+      </section>
+
       <section class="grid">
         <article class="card">
-          <h2>Install OAuth</h2>
-          <p>Start authorization flow for Shopline merchant install.</p>
-          <a class="btn" href="/auth/install">Run /auth/install</a>
+          <h2>Core Behavior</h2>
+          <label class="check"><input type="checkbox" data-field="enabled" /> Enable breadcrumbs</label>
+          <label class="check"><input type="checkbox" data-field="followVisitorPath" /> Follow visitor path</label>
+          <label class="check"><input type="checkbox" data-field="hideTopLevelCategory" /> Hide top-level category</label>
+          <label class="check"><input type="checkbox" data-field="showRootCategory" /> Show root category</label>
+          <label class="check"><input type="checkbox" data-field="mobileScrollable" /> Mobile horizontal scroll</label>
+          <div class="row inline">
+            <div>
+              <label>Root label</label>
+              <input type="text" data-field="rootCategoryLabel" />
+            </div>
+            <div>
+              <label>Root path</label>
+              <input type="text" data-field="rootCategoryPath" />
+            </div>
+          </div>
         </article>
 
         <article class="card">
-          <h2>OAuth Callback</h2>
-          <p>Redirect URI for Shopline app callback.</p>
-          <code>https://fourcore-breadcrumbs.netlify.app/auth/callback</code>
+          <h2>Display</h2>
+          <div class="row inline">
+            <div>
+              <label>Separator</label>
+              <input type="text" data-field="separator" />
+            </div>
+            <div>
+              <label>Alignment</label>
+              <select data-field="alignment">
+                <option value="left">Left</option>
+                <option value="center">Center</option>
+                <option value="right">Right</option>
+              </select>
+            </div>
+          </div>
+          <div class="row inline">
+            <div>
+              <label>Font size</label>
+              <input type="number" min="10" max="16" data-field="fontSize" />
+            </div>
+            <div>
+              <label>Max levels</label>
+              <input type="number" min="2" max="10" data-field="maxLevels" />
+            </div>
+          </div>
+          <div class="row inline">
+            <div>
+              <label>Text color</label>
+              <input type="color" data-field="textColor" />
+            </div>
+            <div>
+              <label>Link color</label>
+              <input type="color" data-field="linkColor" />
+            </div>
+          </div>
+          <div class="row inline">
+            <div>
+              <label>Hover color</label>
+              <input type="color" data-field="hoverColor" />
+            </div>
+            <div>
+              <label>Product title color</label>
+              <input type="color" data-field="productTitleColor" />
+            </div>
+          </div>
+          <label class="check"><input type="checkbox" data-field="useThemeSeparator" /> Use theme separator</label>
+          <label class="check"><input type="checkbox" data-field="useThemeAlignment" /> Use theme alignment</label>
+          <label class="check"><input type="checkbox" data-field="useThemeFontSize" /> Use theme font size</label>
+          <label class="check"><input type="checkbox" data-field="useThemeLinkColor" /> Use theme link color</label>
+          <label class="check"><input type="checkbox" data-field="useThemeHoverColor" /> Use theme hover color</label>
+          <label class="check"><input type="checkbox" data-field="useThemeProductTitleColor" /> Use theme product title color</label>
         </article>
 
         <article class="card">
-          <h2>Webhook Endpoint</h2>
-          <p>Use this for app uninstalled event delivery.</p>
-          <code>https://fourcore-breadcrumbs.netlify.app/webhooks/app-uninstalled</code>
+          <h2>Strategy</h2>
+          <div class="row">
+            <label>Breadcrumb strategy</label>
+            <select data-field="strategy">
+              <option value="default">Smart auto (default)</option>
+              <option value="menu">Menu-based</option>
+            </select>
+          </div>
+          <div class="row">
+            <label>Menu handle</label>
+            <input type="text" data-field="menuHandle" placeholder="main-menu" />
+          </div>
+          <div class="row">
+            <label>Menu top-level handle</label>
+            <input type="text" data-field="menuTopLevelHandle" placeholder="catalog" />
+          </div>
+          <div class="row">
+            <label>Default collection handle</label>
+            <input type="text" data-field="defaultCollectionHandle" placeholder="all" />
+          </div>
+          <div class="row">
+            <label>Ignored collections (comma-separated)</label>
+            <input type="text" data-field="ignoredCollections" placeholder="frontpage,sale" />
+          </div>
         </article>
 
         <article class="card">
-          <h2>Health Check</h2>
-          <p>Quick runtime check.</p>
-          <a class="btn" href="/health">Open /health</a>
+          <h2>SEO and Advanced</h2>
+          <label class="check"><input type="checkbox" data-field="enableSchema" /> Enable JSON-LD BreadcrumbList schema</label>
+          <label class="check"><input type="checkbox" data-field="seoSafeMode" /> SEO safe mode</label>
+          <label class="check"><input type="checkbox" data-field="lastCrumbAsText" /> Render last crumb as plain text</label>
+          <label class="check"><input type="checkbox" data-field="autoDetectLanguageFromUrl" /> Auto-detect language from URL</label>
+          <label class="check"><input type="checkbox" data-field="hideLegacyBreadcrumb" /> Hide legacy breadcrumb</label>
+          <div class="row">
+            <label>Legacy breadcrumb selector</label>
+            <input type="text" data-field="legacyBreadcrumbSelector" placeholder=".breadcrumb, .breadcrumbs" />
+          </div>
+          <div class="row inline">
+            <div>
+              <label>Last crumb weight</label>
+              <select data-field="lastCrumbWeight">
+                <option value="theme">Theme default</option>
+                <option value="500">500</option>
+                <option value="600">600</option>
+                <option value="700">700</option>
+              </select>
+            </div>
+            <div>
+              <label>Title truncate chars</label>
+              <input type="number" min="0" max="120" data-field="productTitleTruncate" />
+            </div>
+          </div>
+          <div class="row inline">
+            <div>
+              <label>Underline mode</label>
+              <select data-field="linkUnderlineMode">
+                <option value="theme">Theme default</option>
+                <option value="always">Always</option>
+                <option value="never">Never</option>
+                <option value="hover">On hover</option>
+              </select>
+            </div>
+            <div>
+              <label>Capitalization</label>
+              <select data-field="capitalizationMode">
+                <option value="theme">Theme default</option>
+                <option value="none">None</option>
+                <option value="uppercase">Uppercase</option>
+                <option value="lowercase">Lowercase</option>
+                <option value="title">Title case</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <label>Home icon image URL</label>
+            <input type="url" data-field="homeIconImageUrl" placeholder="https://..." />
+          </div>
         </article>
       </section>
+
+      <div class="actions">
+        <button class="primary" id="save-btn" type="button">Save settings</button>
+        <button class="secondary" id="reset-btn" type="button">Reset to defaults</button>
+        <a class="btn secondary" id="install-link" href="/auth/install">Run /auth/install</a>
+        <a class="btn secondary" href="/webhooks/app-uninstalled">Webhook endpoint</a>
+      </div>
+
+      <div id="toast" class="toast"></div>
+      <p class="small">This Shopline app version is isolated from your Shopify app codebase.</p>
     </main>
+
+    <script src="/public/dashboard.js" defer></script>
   </body>
 </html>

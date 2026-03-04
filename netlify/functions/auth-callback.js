@@ -1,4 +1,4 @@
-const crypto = require("crypto");
+const { setTokenRecord } = require("./_store");
 
 function required(name) {
   const value = process.env[name];
@@ -45,12 +45,6 @@ async function exchangeToken({ code, clientId, clientSecret, redirectUri }) {
   return { ok: response.ok, status: response.status, data };
 }
 
-function mask(value) {
-  if (!value || typeof value !== "string") return "";
-  if (value.length <= 10) return `${value.slice(0, 2)}***`;
-  return `${value.slice(0, 6)}...${value.slice(-4)}`;
-}
-
 exports.handler = async function handler(event) {
   try {
     const clientId = required("SHOPLINE_APP_KEY");
@@ -59,7 +53,6 @@ exports.handler = async function handler(event) {
 
     const params = event.queryStringParameters || {};
     const code = params.code || "";
-    const state = params.state || "";
     const err = params.error || "";
 
     if (err) {
@@ -94,24 +87,32 @@ exports.handler = async function handler(event) {
       });
     }
 
-    const accessToken = tokenResult.data && tokenResult.data.access_token;
-    const refreshToken = tokenResult.data && tokenResult.data.refresh_token;
+    const merchantId = String(
+      tokenResult.data.resource_owner_id ||
+        params.merchant_id ||
+        params.shop_id ||
+        params.shop ||
+        ""
+    ).trim();
 
-    // We surface token metadata for now; persistent storage comes next.
-    return json(200, {
-      ok: true,
-      message: "SHOPLINE OAuth completed",
-      stateReceived: Boolean(state),
-      token: {
-        accessTokenPreview: mask(accessToken),
-        refreshTokenPreview: mask(refreshToken),
-        expiresIn: tokenResult.data.expires_in,
-        scope: tokenResult.data.scope,
-        tokenType: tokenResult.data.token_type,
-        resourceOwnerId: tokenResult.data.resource_owner_id,
+    if (!merchantId) {
+      return json(500, {
+        ok: false,
+        message: "OAuth succeeded but merchant identifier is missing",
+        tokenResponse: tokenResult.data,
+      });
+    }
+
+    await setTokenRecord(merchantId, tokenResult.data);
+
+    return {
+      statusCode: 302,
+      headers: {
+        location: `/?merchant_id=${encodeURIComponent(merchantId)}&connected=1`,
+        "cache-control": "no-store",
+        "set-cookie": `fc_shopline_merchant=${encodeURIComponent(merchantId)}; Path=/; Max-Age=2592000; Secure; HttpOnly; SameSite=Lax`,
       },
-      nextStep: "Persist tokens by merchant and wire real app settings CRUD.",
-    });
+    };
   } catch (error) {
     return json(500, { ok: false, message: error.message });
   }

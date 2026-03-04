@@ -3,6 +3,11 @@
   functions = "netlify/functions"
 
 [[redirects]]
+  from = "/dashboard"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
   from = "/auth/install"
   to = "/.netlify/functions/auth-install"
   status = 200
@@ -10,6 +15,16 @@
 [[redirects]]
   from = "/auth/callback"
   to = "/.netlify/functions/auth-callback"
+  status = 200
+
+[[redirects]]
+  from = "/api/session"
+  to = "/.netlify/functions/api-session"
+  status = 200
+
+[[redirects]]
+  from = "/api/settings"
+  to = "/.netlify/functions/api-settings"
   status = 200
 
 [[redirects]]

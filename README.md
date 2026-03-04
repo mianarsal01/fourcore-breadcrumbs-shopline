@@ -1,8 +1,8 @@
 # fourcore-breadcrumbs-shopline
 
-Shopline version scaffold for FourCore Breadcrumbs.
+Shopline adaptation of FourCore Breadcrumbs, implemented in this repository only.
 
-## App URLs (SHOPLINE Partner Portal)
+## URLs for SHOPLINE Partner Portal
 
 - App URL: `https://fourcore-breadcrumbs.netlify.app`
 - App callback URL: `https://fourcore-breadcrumbs.netlify.app/auth/callback`
@@ -14,18 +14,16 @@ Shopline version scaffold for FourCore Breadcrumbs.
 - `SHOPLINE_SCOPES` (comma-separated, no spaces)
 - `SHOPLINE_REDIRECT_URI=https://fourcore-breadcrumbs.netlify.app/auth/callback`
 
-## Endpoints
+## App Endpoints
 
-- `/auth/install` -> Start OAuth authorization redirect.
-- `/auth/callback` -> Exchanges `code` for access token.
-- `/webhooks/app-uninstalled` -> Verifies webhook signature.
-- `/health` -> Runtime status check.
+- `/auth/install` -> Starts OAuth authorization.
+- `/auth/callback` -> Exchanges code for access token and stores token per merchant.
+- `/api/session?merchant_id=...` -> Returns OAuth connection status.
+- `/api/settings?merchant_id=...` -> GET/POST settings payload for dashboard.
+- `/webhooks/app-uninstalled` -> Webhook signature verification endpoint.
+- `/health` -> Runtime check.
 
 ## Notes
 
-- OAuth token exchange is implemented.
-- Token persistence is not implemented yet; next step is storing access/refresh token per merchant.
-- Webhook signature verification follows SHOPLINE docs using:
-  - `x-shopline-developer-event-timestamp`
-  - `x-shopline-hmac-sha256`
-  - message format: `timestamp + ':' + JSON.stringify(sortedPayload)`
+- Merchant tokens and settings are stored in Netlify Blobs.
+- This codebase is separate from the Shopify app and does not modify it.

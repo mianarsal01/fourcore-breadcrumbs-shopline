@@ -1,0 +1,10 @@
+{
+  "name": "fourcore-breadcrumbs-shopline",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Shopline version of FourCore Breadcrumbs",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@netlify/blobs": "^8.1.0"
+  }
+}
