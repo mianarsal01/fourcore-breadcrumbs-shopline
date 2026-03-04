@@ -46,12 +46,43 @@ exports.handler = async function handler(event) {
     // Next iteration should store state in encrypted cookie or DB and verify on callback.
     params.set("next", next);
 
+    const authorizeUrl = `https://developers.shoplineapp.com/oauth/authorize?${params.toString()}`;
+    const escapedUrl = authorizeUrl.replace(/"/g, "&quot;");
+
+    // SHOPLINE admin embeds apps in an iframe. OAuth must run in the top-level
+    // window because SSO pages reject iframe embedding.
     return {
-      statusCode: 302,
+      statusCode: 200,
       headers: {
-        location: `https://developers.shoplineapp.com/oauth/authorize?${params.toString()}`,
+        "content-type": "text/html; charset=utf-8",
         "cache-control": "no-store",
       },
+      body: `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Redirecting to SHOPLINE</title>
+  </head>
+  <body style="font-family: sans-serif; padding: 16px;">
+    <p>Redirecting to SHOPLINE authorization...</p>
+    <p><a href="${escapedUrl}" target="_top" rel="noopener noreferrer">Continue</a></p>
+    <script>
+      (function () {
+        var url = ${JSON.stringify(authorizeUrl)};
+        try {
+          if (window.top && window.top !== window.self) {
+            window.top.location.href = url;
+          } else {
+            window.location.href = url;
+          }
+        } catch (e) {
+          window.location.href = url;
+        }
+      })();
+    </script>
+  </body>
+</html>`,
     };
   } catch (error) {
     return {
