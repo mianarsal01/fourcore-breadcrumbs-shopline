@@ -3,8 +3,18 @@
   functions = "netlify/functions"
 
 [[redirects]]
+  from = "/auth/install"
+  to = "/.netlify/functions/auth-install"
+  status = 200
+
+[[redirects]]
   from = "/auth/callback"
   to = "/.netlify/functions/auth-callback"
+  status = 200
+
+[[redirects]]
+  from = "/webhooks/app-uninstalled"
+  to = "/.netlify/functions/webhook-app-uninstalled"
   status = 200
 
 [[redirects]]

@@ -3,79 +3,153 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FourCore Breadcrumbs - Shopline App</title>
+    <title>FourCore Breadcrumbs | Shopline</title>
     <style>
+      @import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap");
+
       :root {
-        --bg: #f4f6f8;
-        --card: #ffffff;
-        --text: #1f2937;
-        --muted: #4b5563;
-        --accent: #0f766e;
+        --fc-bg-1: #ffffff;
+        --fc-bg-2: #f5f5f5;
+        --fc-bg-3: #ebebeb;
+        --fc-text: #101215;
+        --fc-muted: #5a5f65;
+        --fc-border: #c8c8c8;
+        --fc-strong: #17191d;
+      }
+
+      * {
+        box-sizing: border-box;
       }
 
       body {
         margin: 0;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        background: linear-gradient(135deg, #f8fafc 0%, #ecfeff 100%);
-        color: var(--text);
+        font-family: "Manrope", "Avenir Next", "Segoe UI", sans-serif;
+        color: var(--fc-text);
+        background: radial-gradient(circle at 0 0, #fdfdfd 0%, #f5f5f5 40%, #ececec 100%);
         min-height: 100vh;
-        display: grid;
-        place-items: center;
         padding: 24px;
       }
 
+      .app {
+        max-width: 1040px;
+        margin: 0 auto;
+        border-radius: 20px;
+        border: 1px solid rgba(38, 40, 44, 0.2);
+        box-shadow: 0 18px 34px rgba(20, 22, 24, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.82);
+        background: linear-gradient(180deg, var(--fc-bg-1) 0%, var(--fc-bg-2) 58%, var(--fc-bg-3) 100%);
+        padding: 24px;
+      }
+
+      .hero {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        background: #f6f6f6;
+        border: 1px solid var(--fc-border);
+        border-radius: 18px;
+        padding: 16px 20px;
+      }
+
+      .hero h1 {
+        margin: 0;
+        font-size: 1.4rem;
+      }
+
+      .hero p {
+        margin: 8px 0 0;
+        color: var(--fc-muted);
+      }
+
+      .brand {
+        width: 104px;
+        height: 42px;
+        object-fit: contain;
+      }
+
+      .grid {
+        margin-top: 16px;
+        display: grid;
+        gap: 12px;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      }
+
       .card {
-        background: var(--card);
-        border: 1px solid #e5e7eb;
+        border: 1px solid #cfcfcf;
         border-radius: 14px;
-        width: min(760px, 100%);
-        padding: 28px;
-        box-shadow: 0 10px 30px rgba(2, 6, 23, 0.08);
+        background: #f3f3f3;
+        padding: 14px;
       }
 
-      h1 {
+      .card h2 {
         margin: 0 0 8px;
-        font-size: 1.6rem;
+        font-size: 1rem;
       }
 
-      p {
-        margin: 8px 0;
-        line-height: 1.5;
-        color: var(--muted);
+      .card p {
+        margin: 0 0 12px;
+        color: var(--fc-muted);
+        font-size: 0.94rem;
+      }
+
+      .btn {
+        display: inline-block;
+        background: var(--fc-strong);
+        color: #fff;
+        text-decoration: none;
+        border-radius: 999px;
+        padding: 8px 13px;
+        font-size: 0.86rem;
+        font-weight: 700;
       }
 
       code {
-        background: #f1f5f9;
-        padding: 2px 6px;
-        border-radius: 6px;
-      }
-
-      a {
-        color: var(--accent);
-        text-decoration: none;
-      }
-
-      a:hover {
-        text-decoration: underline;
+        display: block;
+        margin-top: 8px;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 8px;
+        overflow-wrap: anywhere;
+        font-size: 0.82rem;
       }
     </style>
   </head>
   <body>
-    <main class="card">
-      <h1>FourCore Breadcrumbs (Shopline)</h1>
-      <p>This Netlify site is live and ready for SHOPLINE app configuration.</p>
-      <p>
-        Recommended callback URL:
-        <code>/auth/callback</code>
-      </p>
-      <p>
-        Health check:
-        <a href="/.netlify/functions/health">/.netlify/functions/health</a>
-      </p>
-      <p>
-        OAuth callback test:
-        <a href="/auth/callback?code=test&shop=test-shop">/auth/callback?code=test&amp;shop=test-shop</a>
-      </p>
+    <main class="app">
+      <section class="hero">
+        <div>
+          <h1>FourCore Breadcrumbs for Shopline</h1>
+          <p>Production scaffold for OAuth, callback, and webhook endpoints.</p>
+        </div>
+        <img src="/logo.png" alt="FourCore" class="brand" />
+      </section>
+
+      <section class="grid">
+        <article class="card">
+          <h2>Install OAuth</h2>
+          <p>Start authorization flow for Shopline merchant install.</p>
+          <a class="btn" href="/auth/install">Run /auth/install</a>
+        </article>
+
+        <article class="card">
+          <h2>OAuth Callback</h2>
+          <p>Redirect URI for Shopline app callback.</p>
+          <code>https://fourcore-breadcrumbs.netlify.app/auth/callback</code>
+        </article>
+
+        <article class="card">
+          <h2>Webhook Endpoint</h2>
+          <p>Use this for app uninstalled event delivery.</p>
+          <code>https://fourcore-breadcrumbs.netlify.app/webhooks/app-uninstalled</code>
+        </article>
+
+        <article class="card">
+          <h2>Health Check</h2>
+          <p>Quick runtime check.</p>
+          <a class="btn" href="/health">Open /health</a>
+        </article>
+      </section>
     </main>
   </body>
 </html>
